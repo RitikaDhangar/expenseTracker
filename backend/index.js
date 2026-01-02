@@ -1,15 +1,23 @@
 const express = require("express");
 const app = express();
+const cors = require('cors');
+const sequelize = require('./config/database')
+const UserRouter=require('./routes/UserRouter')
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.post("/about", (req, res) => {
-    console.log(req?.body)
-  res.send({ data: req?.body });
-});
-// app.get('/user', (req, res) => {
-//     res.sendFile('..')
-// })
+app.use(cors());
+app.use(UserRouter)
 
-app.listen(9000, () => {
-  console.log("listen to me");
-});
+const startServer = async () => {
+  try {
+    await sequelize.sync(
+      // { force: true }
+    );
+    app.listen(3000, () => {
+      console.log('listen to the server');
+    })
+  } catch (err) {
+    console.log('Unable to correct the db',err);
+  }
+}
+
+startServer()
