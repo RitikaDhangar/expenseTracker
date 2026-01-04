@@ -1,5 +1,5 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../config/database");
+import { DataTypes } from "sequelize";
+import sequelize from "../config/database.js";
 const User = sequelize.define(
   "user",
   {
@@ -24,16 +24,6 @@ const User = sequelize.define(
     password: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: {
-        is: {
-          args: "/^(?=.*[A-Za-z])(?=.*d)(?=.*[@$!%*#?&]).+$/",
-          msg: "Password must contain at least 1 letter, 1 number, and 1 special character",
-        },
-        len: {
-          args: [5, 100],
-          msg: "Password must be atleast 6 chracters long",
-        },
-      },
     },
     phoneNo: {
       type: DataTypes.STRING,
@@ -50,7 +40,7 @@ const User = sequelize.define(
     timestamps: false,
   }
 );
-module.exports = User;
+export default User;
 
 //signup
 //jwt token

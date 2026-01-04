@@ -2,12 +2,14 @@ import { Routes, Route } from "react-router-dom";
 import Signup from "./components/Auth/Signup";
 import Header from "./components/nav/Header";
 import Login from "./components/Auth/Login";
+import Home from "./components/expense/Home";
 
 function App() {
   return (
     <Routes>
       <Route element={<Header />}>
-        <Route path="/" element={<Signup />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
       </Route>
     </Routes>

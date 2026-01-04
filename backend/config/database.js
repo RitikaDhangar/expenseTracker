@@ -1,6 +1,7 @@
-const { Sequelize } = require("sequelize");
+import Sequelize from "sequelize";
 process.env.DOTENV_CONFIG_QUIET = "true";
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
 const sequelize = new Sequelize(
   process.env.DB_NAME,
   process.env.DB_USER_NAME,
@@ -8,8 +9,8 @@ const sequelize = new Sequelize(
   {
     host: process.env.DB_HOST,
     dialect: "mysql",
-    logging: false
+    logging: false,
   }
 );
 
-module.exports = sequelize;
+export default sequelize;

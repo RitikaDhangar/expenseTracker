@@ -2,13 +2,15 @@ import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
-import axios from 'axios';
-import toast from 'react-hot-toast'
-import Alert from 'react-bootstrap/Alert';
+import axios from "axios";
+import toast from "react-hot-toast";
+import Alert from "react-bootstrap/Alert";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { STORE_USER_NAME } from "../../features/UserSlice";
 
 const Signup = () => {
-
+  const dispatch = useDispatch();
   const [inputControl, setInputControl] = useState({
     name: "",
     email: "",
@@ -33,7 +35,7 @@ const Signup = () => {
     password: "",
     phone: "",
   });
-  const [alertErr, setAlertErr] = useState({ status: false, msg: '' });
+  const [alertErr, setAlertErr] = useState({ status: false, msg: "" });
   const [submitForm, setSubmitForm] = useState(false);
   const navigate = useNavigate();
   console.log({ alertErr });
@@ -54,22 +56,24 @@ const Signup = () => {
     setSubmitForm(true);
 
     const { name, email, password, phone } = inputControl;
-    const res = await axios.post(`http://localhost:3000/createUser`, {
+    const res = await axios.post(`http://localhost:9000/createUser`, {
       name,
-      email:email?.toLowerCase(),
+      email: email?.toLowerCase(),
       password,
-      phone
-    })
-    console.log(res)
+      phone,
+    });
+    console.log(res);
     if (res.data.success) {
-      return toast.success('User Created successfully');
+      dispatch(STORE_USER_NAME(name));
+      toast.success("User Created succcessfully");
+      navigate("/");
     } else {
       setAlertErr({ status: true, msg: res?.data?.message });
     }
   };
   const navigateLogin = () => {
-    navigate('/login')
-  }
+    navigate("/login");
+  };
   const checkValidationForms = () => {
     if (
       inputErr?.name ||
@@ -94,7 +98,7 @@ const Signup = () => {
       }
       if (
         inputControl?.email?.length < 5 ||
-        !inputControl?.email.includes('@')
+        !inputControl?.email.includes("@")
       ) {
         setInValidForm((prev) => {
           return {
@@ -156,12 +160,17 @@ const Signup = () => {
   }, [submitForm, inputControl]);
   return (
     <>
-      {alertErr?.status && <Alert variant="danger" onClose={() => setAlertErr({ msg: '', status: false })} dismissible style={{ height: "60px" }}>
-        <p>
-          {alertErr?.msg}
-        </p>
-      </Alert>}
-      <h2 style={{textAlign:"center",marginTop:"40px"}}>User Signup</h2>
+      {alertErr?.status && (
+        <Alert
+          variant="danger"
+          onClose={() => setAlertErr({ msg: "", status: false })}
+          dismissible
+          style={{ height: "60px" }}
+        >
+          <p>{alertErr?.msg}</p>
+        </Alert>
+      )}
+      <h2 style={{ textAlign: "center", marginTop: "40px" }}>User Signup</h2>
       <div
         style={{
           display: "flex",
@@ -212,7 +221,9 @@ const Signup = () => {
                   User name is Mendatory
                 </Form.Text>
               ) : InValidForm?.name ? (
-                <Form.Text className="text-danger">{InValidForm?.name}</Form.Text>
+                <Form.Text className="text-danger">
+                  {InValidForm?.name}
+                </Form.Text>
               ) : null}
             </FloatingLabel>
             <FloatingLabel
@@ -292,7 +303,7 @@ const Signup = () => {
                       : "#ced4da",
                   boxShadow:
                     focused?.password &&
-                      (!inputErr?.password || InValidForm?.password)
+                    (!inputErr?.password || InValidForm?.password)
                       ? "0 0 0 0.2rem rgba(255, 0, 0, 0.25)"
                       : "none",
                 }}
@@ -301,7 +312,10 @@ const Signup = () => {
                     return { ...prev, password: e.target.value };
                   });
                   setInputErr((prev) => {
-                    return { ...prev, password: Boolean(e.target.value?.length) };
+                    return {
+                      ...prev,
+                      password: Boolean(e.target.value?.length),
+                    };
                   });
                 }}
               />
@@ -348,7 +362,10 @@ const Signup = () => {
                       return { ...prev, phone: e.target.value };
                     });
                     setInputErr((prev) => {
-                      return { ...prev, phone: Boolean(e.target.value?.length) };
+                      return {
+                        ...prev,
+                        phone: Boolean(e.target.value?.length),
+                      };
                     });
                   }
                 }}
@@ -375,12 +392,12 @@ const Signup = () => {
             </div>
           </form>
         </div>
-
       </div>
-      <div style={{ textAlign: 'center', marginTop: '5px' }}>
-        <p onClick={navigateLogin} style={{cursor:'pointer',color:'red'}} > Already a User?
-          login</p>
-
+      <div style={{ textAlign: "center", marginTop: "5px" }}>
+        <p onClick={navigateLogin} style={{ cursor: "pointer", color: "red" }}>
+          {" "}
+          Already a User? login
+        </p>
       </div>
     </>
   );
