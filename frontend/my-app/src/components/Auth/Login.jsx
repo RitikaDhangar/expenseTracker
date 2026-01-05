@@ -50,6 +50,9 @@ const Login = () => {
   const navigateLogin = () => {
     navigate("/signup");
   };
+  const forgetPasswordHandler = async() => {
+    navigate('/forgotpassword')
+  }
   return (
     <>
       {alertErr?.status && (
@@ -156,6 +159,7 @@ const Login = () => {
           </FloatingLabel>
           <div style={{ display: "flex", justifyContent: "center" }}>
             <Button
+              disabled={!(inputControl?.email && inputControl?.password)}
               variant="primary"
               style={{ width: "200px" }}
               onClick={formSubmitHandler}
@@ -166,9 +170,11 @@ const Login = () => {
         </form>
       </div>
       <div style={{ textAlign: "center", marginTop: "5px" }}>
-        <p onClick={navigateLogin} style={{ cursor: "pointer", color: "red" }}>
-          {" "}
+        <p onClick={navigateLogin} style={{ cursor: "pointer", color: "blue" }}>
           New User? Sign Up
+        </p>
+          <p onClick={forgetPasswordHandler} style={{ cursor: "pointer", color: "red" }}>
+          Forget Password
         </p>
       </div>
     </>

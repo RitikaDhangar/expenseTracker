@@ -1,14 +1,17 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/database.js";
+
 const User = sequelize.define(
   "user",
   {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
-      len: {
-        args: [3, 225],
-        msg: "Name must be between 3 to 225 characters long",
+      validate: {
+        len: {
+          args: [3, 225],
+          msg: "Name must be between 3 to 225 characters long",
+        },
       },
     },
     email: {
@@ -35,19 +38,18 @@ const User = sequelize.define(
         },
       },
     },
+    resetToken: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    resetTokenExpiry: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
   },
   {
     timestamps: false,
   }
 );
-export default User;
 
-//signup
-//jwt token
-//login
-//forgot password
-//store user main info as middleware
-//Expense Tracker curd
-//Extra work
-//feb->socket,reddis,
-//march->AWS,react
+export default User;

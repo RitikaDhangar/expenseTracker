@@ -11,8 +11,9 @@ const startServer = async () => {
   try {
     await sequelize
       .sync
-      // { force: true }
-      ();
+      (
+        // { force: true }
+      );
     app.listen(9000, () => {
       console.log("listen to the server");
     });
@@ -24,11 +25,7 @@ const startServer = async () => {
 startServer();
 
 /*
-1.Login and SignUp user Hi [name]
-2.Navigation properly Signup->logout button
-3.logout/login redireact 
-4.After sometime relogin using jwt token
-5.before signUp/login all pages are unaccessable  
-6.Neither navbar will be show
-7.Redux System 
+1. forgot password
+2. Navbar
+3. logout
 */

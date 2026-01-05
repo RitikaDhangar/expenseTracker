@@ -36,9 +36,8 @@ const Signup = () => {
     phone: "",
   });
   const [alertErr, setAlertErr] = useState({ status: false, msg: "" });
-  const [submitForm, setSubmitForm] = useState(false);
+  // const [submitForm, setSubmitForm] = useState(false);
   const navigate = useNavigate();
-  console.log({ alertErr });
 
   const formSubmitHandler = async () => {
     setInputErr({
@@ -53,8 +52,11 @@ const Signup = () => {
       phone: false,
       name: false,
     });
-    setSubmitForm(true);
-
+    // setSubmitForm(true);
+    const isError = checkValidationForms();
+    if (isError) {
+      return;
+    }
     const { name, email, password, phone } = inputControl;
     const res = await axios.post(`http://localhost:9000/createUser`, {
       name,
@@ -62,7 +64,6 @@ const Signup = () => {
       password,
       phone,
     });
-    console.log(res);
     if (res.data.success) {
       dispatch(STORE_USER_NAME(name));
       toast.success("User Created succcessfully");
@@ -75,6 +76,7 @@ const Signup = () => {
     navigate("/login");
   };
   const checkValidationForms = () => {
+    let isError = false;
     if (
       inputErr?.name ||
       inputErr?.email ||
@@ -82,6 +84,7 @@ const Signup = () => {
       inputErr?.phone
     ) {
       if (inputControl?.name?.length < 3) {
+        isError = true;
         setInValidForm((prev) => {
           return {
             ...prev,
@@ -100,6 +103,7 @@ const Signup = () => {
         inputControl?.email?.length < 5 ||
         !inputControl?.email.includes("@")
       ) {
+                isError = true;
         setInValidForm((prev) => {
           return {
             ...prev,
@@ -120,6 +124,7 @@ const Signup = () => {
         !regex.test(inputControl.password) ||
         inputControl?.password?.length < 4
       ) {
+                isError = true;
         setInValidForm((prev) => {
           return {
             ...prev,
@@ -136,6 +141,7 @@ const Signup = () => {
       }
 
       if (inputControl?.phone?.length < 10) {
+                isError = true;
         return setInValidForm((prev) => {
           return {
             ...prev,
@@ -151,13 +157,14 @@ const Signup = () => {
         });
       }
     }
+    return isError
   };
 
-  useEffect(() => {
-    if (submitForm) {
-      checkValidationForms();
-    }
-  }, [submitForm, inputControl]);
+  // useEffect(() => {
+  //   if (submitForm) {
+  //     checkValidationForms();
+  //   }
+  // }, [submitForm, inputControl]);
   return (
     <>
       {alertErr?.status && (
@@ -303,7 +310,7 @@ const Signup = () => {
                       : "#ced4da",
                   boxShadow:
                     focused?.password &&
-                    (!inputErr?.password || InValidForm?.password)
+                      (!inputErr?.password || InValidForm?.password)
                       ? "0 0 0 0.2rem rgba(255, 0, 0, 0.25)"
                       : "none",
                 }}
@@ -384,6 +391,7 @@ const Signup = () => {
             <div style={{ display: "flex", justifyContent: "center" }}>
               <Button
                 variant="primary"
+                disabled={!(inputControl?.email && inputControl?.name && inputControl?.password && inputControl?.phone)}
                 style={{ width: "200px" }}
                 onClick={formSubmitHandler}
               >
