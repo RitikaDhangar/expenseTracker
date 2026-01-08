@@ -1,3 +1,9 @@
-.NavLinkClass:active {
- color:blue;
+.Navbar {
+  text-decoration: none;
+  color: white;
+}
+
+.activeNavbar {
+  text-decoration: none;
+  color: skyblue;
 }

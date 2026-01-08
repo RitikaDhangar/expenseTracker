@@ -3,23 +3,38 @@ import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
-import toast from "react-hot-toast";
+import {toast} from "react-hot-toast";
+import Alert from "react-bootstrap/Alert";
+import { useNavigate } from "react-router-dom";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
+  const navigate = useNavigate('');
+  const [alertSuccess, setAlertSuccess] = useState({msg:"",status:false});
   const formSubmitHandler = async () => {
     const res = await axios.post(`http://localhost:9000/forgotPassword`, {
       email,
     });
-      console.log({res})
       if (res.data.success) {
-        
+      setAlertSuccess({status:true,msg:'Reset Link send to your Mail. Please Check!'});
+      navigate('/login')
     } else {
      return toast.error('No Record Find! Please Signup')
     }
   };
   return (
-    <div
+    <>
+      {alertSuccess?.status && (
+        <Alert
+          variant="info"
+          onClose={() => setAlertSuccess({ msg: "", status: false })}
+          dismissible
+          style={{ height: "60px" }}
+        >
+          <p>{alertSuccess?.msg}</p>
+        </Alert>
+      )}
+      <div
       style={{
         marginTop: "50px",
         width: "100%",
@@ -29,6 +44,7 @@ const ForgotPassword = () => {
         justifyItems: "center",
       }}
     >
+
       <h3 style={{ textAlign: "center" }}>Enter Your Login Email</h3>
       <div
         style={{
@@ -75,6 +91,8 @@ const ForgotPassword = () => {
         </div>
       </div>
     </div>
+      </>
+
   );
 };
 export default ForgotPassword;

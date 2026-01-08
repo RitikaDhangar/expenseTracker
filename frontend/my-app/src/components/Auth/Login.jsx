@@ -7,7 +7,7 @@ import Alert from "react-bootstrap/Alert";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { STORE_USER_NAME } from "../../features/UserSlice";
+import { STORE_USER_NAME, STORE_USER_TOKEN } from "../../features/UserSlice";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -42,6 +42,7 @@ const Login = () => {
     });
     if (res.data.success) {
       dispatch(STORE_USER_NAME(res?.data?.data?.username));
+      dispatch(STORE_USER_TOKEN(res?.data?.data?.token));
       navigate("/");
     } else {
       setAlertErr({ status: true, msg: res?.data?.message });

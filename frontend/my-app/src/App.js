@@ -1,22 +1,51 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import Signup from "./components/Auth/Signup";
 import Header from "./components/nav/Header";
 import Login from "./components/Auth/Login";
 import Home from "./components/expense/Home";
-import ForgotPassword from './components/password/ForgotPassword'
+import ForgotPassword from "./components/password/ForgotPassword";
 import ResetPassword from "./components/password/ResetPassword";
+import toast, { Toaster } from "react-hot-toast";
+import ErrorPage from "./ErrorPage.js";
+import ProtectedRoute from "./components/ProtectedRoute.js";
+import Expense from "./components/expense/AllExpense.js";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { STORE_USER_NAME, STORE_USER_TOKEN } from "./features/UserSlice.js";
+import { isTokenExpired } from "./components/utils.js";
 
 function App() {
+  const { token } = useSelector((store) => store.UserInfo);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (!token) {
+      return;
+    }
+    if (isTokenExpired(token)) {
+      navigate("/login");
+      dispatch(STORE_USER_NAME(""));
+      dispatch(STORE_USER_TOKEN(""));
+      toast.error('Session is expired. Please login again')
+    }
+  }, []);
   return (
-    <Routes>
-      <Route element={<Header />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/resetpassword" element={<ResetPassword />} />
-        <Route path="/forgotpassword" element={<ForgotPassword />} />
-      </Route>
-    </Routes>
+    <>
+      <Toaster position="top-right" reverseOrder={false} />
+      <Routes>
+        <Route element={<Header />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/forgotpassword" element={<ForgotPassword />} />
+          <Route path="/resetpassword/:token" element={<ResetPassword />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/expense" element={<Expense />} />
+          </Route>
+          <Route path="*" element={<ErrorPage />} />
+        </Route>
+      </Routes>
+    </>
   );
 }
 

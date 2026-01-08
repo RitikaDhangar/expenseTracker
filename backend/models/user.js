@@ -4,6 +4,11 @@ import sequelize from "../config/database.js";
 const User = sequelize.define(
   "user",
   {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -37,6 +42,10 @@ const User = sequelize.define(
           msg: "Contact must be between 8 to 12 digits long",
         },
       },
+    },
+    isPremiumUser: {
+      type: DataTypes.BOOLEAN,
+      defaultValue:false
     },
     resetToken: {
       type: DataTypes.STRING,

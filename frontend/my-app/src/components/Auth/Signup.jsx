@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import Alert from "react-bootstrap/Alert";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { STORE_USER_NAME } from "../../features/UserSlice";
+import { STORE_USER_NAME, STORE_USER_TOKEN } from "../../features/UserSlice";
 
 const Signup = () => {
   const dispatch = useDispatch();
@@ -66,6 +66,7 @@ const Signup = () => {
     });
     if (res.data.success) {
       dispatch(STORE_USER_NAME(name));
+      dispatch(STORE_USER_TOKEN(res?.data?.data?.token));
       toast.success("User Created succcessfully");
       navigate("/");
     } else {
@@ -128,7 +129,7 @@ const Signup = () => {
         setInValidForm((prev) => {
           return {
             ...prev,
-            password: "Password is week",
+            password: "Password is weak",
           };
         });
       } else {

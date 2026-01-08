@@ -30,7 +30,7 @@ export const createUser = async (req, res) => {
       success: 1,
     });
   } catch (err) {
-    console.log({ err });
+    console.log('createUser err',err);
     if (err?.name === "SequelizeValidationError") {
       return res.json({
         message: err.errors[0].message,
@@ -61,8 +61,13 @@ export const loginUser = async (req, res) => {
       });
     }
     const isUserFound = await comparePassword(password, existUser?.password);
-    if (isUserFound) {
-      const token = generateToken(isUserFound?.id);
+    const findUser =await User.findOne({
+      where: {
+        email
+      }
+    })
+    if (isUserFound && findUser) {
+      const token = generateToken(findUser?.id);
       return res.json({
         message: "User successfully LoggedIn",
         data: { username: existUser?.name, token },
@@ -115,7 +120,7 @@ export const forgotPassword = async (req, res) => {
         <p>This Link is valid for 15 mins</p>
         `,
       });
-      return res.json({ message: "Email send successfully", data: [], success: 0 });
+      return res.json({ message: "Email send successfully", data: [], success: 1 });
     } catch (mailErr) {
       console.log(`MailErr is ${mailErr}`)
       UserExist.resetToken = null;

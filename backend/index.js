@@ -2,18 +2,35 @@ import express from "express";
 const app = express();
 import cors from "cors";
 import sequelize from "./config/database.js";
+import User from "./models/user.js";
+import Expense from "./models/Expenses.js";
+import Order from "./models/Order.js";
 import UserRouter from "./routes/UserRouter.js";
+import ExpenseRouter from "./routes/ExpenseRouter.js";
+import OrderRouter from './routes/OrderRouter.js'
 app.use(express.json());
 app.use(cors());
 app.use(UserRouter);
+app.use(ExpenseRouter);
+app.use(OrderRouter);
+
+//One to many relationship between User & Expenses
+User.hasMany(Expense, {
+  foreignKey: "userId",
+  onDelete: "CASCADE",
+});
+Expense.belongsTo(User);
+
+// One to many relationship between User and Order
+User.hasMany(Order, {
+  foreignKey: "userId",
+  onDelete: "CASCADE",
+});
+Order.belongsTo(User);
 
 const startServer = async () => {
   try {
-    await sequelize
-      .sync
-      (
-        // { force: true }
-      );
+    await sequelize.sync();
     app.listen(9000, () => {
       console.log("listen to the server");
     });
@@ -25,7 +42,12 @@ const startServer = async () => {
 startServer();
 
 /*
-1. forgot password
-2. Navbar
-3. logout
+
+1.Premium Buy
+2.Premium Page->date filter
+3. Pagination
+4. asc/desc
+5. Sum
+
+
 */
