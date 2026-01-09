@@ -23,7 +23,7 @@ export const createUser = async (req, res) => {
       password: hashPassword,
       phoneNo,
     });
-    const token = generateToken(createdUser?.id);
+    const token = generateToken(createdUser?.id,false);
     return res.status(201).json({
       message: "User created successfully",
       data: { token },
@@ -67,7 +67,7 @@ export const loginUser = async (req, res) => {
       }
     })
     if (isUserFound && findUser) {
-      const token = generateToken(findUser?.id);
+      const token = generateToken(findUser?.id,false);
       return res.json({
         message: "User successfully LoggedIn",
         data: { username: existUser?.name, token },

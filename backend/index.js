@@ -8,11 +8,15 @@ import Order from "./models/Order.js";
 import UserRouter from "./routes/UserRouter.js";
 import ExpenseRouter from "./routes/ExpenseRouter.js";
 import OrderRouter from './routes/OrderRouter.js'
+import PremiumUserRouter from './routes/PremiumUserRouter.js'
+import PuppeteerRouter from './routes/PuppeteerRouter.js'
 app.use(express.json());
 app.use(cors());
 app.use(UserRouter);
 app.use(ExpenseRouter);
 app.use(OrderRouter);
+app.use(PremiumUserRouter);
+app.use(PuppeteerRouter);
 
 //One to many relationship between User & Expenses
 User.hasMany(Expense, {
@@ -43,11 +47,10 @@ startServer();
 
 /*
 
-1.Premium Buy
-2.Premium Page->date filter
-3. Pagination
-4. asc/desc
-5. Sum
+1.Premium Page->date filter
+2. Pagination
+3. asc/desc
+4. Sum
 
 
 */

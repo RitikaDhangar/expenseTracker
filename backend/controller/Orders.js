@@ -5,6 +5,7 @@ import Order from "../models/Order.js";
 import { where } from "sequelize";
 import sequelize from "../config/database.js";
 import User from "../models/user.js";
+import { generateToken } from "./utils/jwt.js";
 export const createOrder = async (req, res) => {
   try {
     const newOrder = await Razorpay.orders.create({
@@ -69,8 +70,9 @@ export const verifyPayment = async (req, res) => {
         transaction: t,
       }
     );
+    const token = generateToken(req?.user?.id,true);
     await t.commit();
-    return res.json({ message: "User is premium now", data: [], success: 1 });
+    return res.json({ message: "User is premium now", data: {token}, success: 1 });
   } catch (err) {
     await t.rollback();
     console.log(`Error in verifyPayment is ${err}`);

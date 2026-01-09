@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from 'bcrypt'
-export const generateToken = (userId) => {
-  return jwt.sign({ id: userId }, process.env.JWT_SECRET_KEY, {
+export const generateToken = (userId,isPremiumUser) => {
+  return jwt.sign({ id: userId,isPremiumUser }, process.env.JWT_SECRET_KEY, {
     expiresIn: "1h",
   });
 };

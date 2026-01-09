@@ -4,6 +4,7 @@ import { persistStore } from "redux-persist";
 import persistReducer from "redux-persist/es/persistReducer";
 import storage from "redux-persist/lib/storage";
 import ExpenseReducer from './features/ExpenseSlice'
+import CustomReducer from './features/CustomSlice'
 import {
   FLUSH,
   REHYDRATE,
@@ -21,7 +22,8 @@ const persistUserReducer = persistReducer(userPersistConfig, UserReducer);
 const store = configureStore({
   reducer: {
     UserInfo: persistUserReducer,
-    expenseInfo:ExpenseReducer
+    expenseInfo: ExpenseReducer,
+    CustomInfo:CustomReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

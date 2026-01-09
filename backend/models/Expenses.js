@@ -10,7 +10,7 @@ const Expense = sequelize.define(
       primaryKey: true,
     },
     amount: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     ItemName: {
@@ -30,7 +30,7 @@ const Expense = sequelize.define(
     },
   },
   {
-    timestamps: false,
+    timestamps: true,
   }
 );
 export default Expense;

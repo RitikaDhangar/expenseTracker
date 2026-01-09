@@ -25,28 +25,34 @@ const Header = () => {
         <Container>
           <Navbar.Brand>Expense Tracker</Navbar.Brand>
           <Nav className="me-auto" style={{ display: 'flex', gap: '12px', justifyContent: 'space-between', width: '100%' }} >
-            <div style={{ display:'flex',gap:'12px'}}>
-            <NavLink to="/" style={{
-              textDecoration: 'none',
-            }}
-              className={({ isActive }) => isActive ? "activeNavbar" : "Navbar"}
-            >Home</NavLink>
-            <NavLink to="/expense" style={{
-              textDecoration: 'none',
-            }}
-              className={({ isActive }) => isActive ? "activeNavbar" : "Navbar"}
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <NavLink to="/" style={{
+                textDecoration: 'none',
+              }}
+                className={({ isActive }) => isActive ? "activeNavbar" : "Navbar"}
+              >Home</NavLink>
+              <NavLink to="/expense" style={{
+                textDecoration: 'none',
+              }}
+                className={({ isActive }) => isActive ? "activeNavbar" : "Navbar"}
               >Expenses</NavLink>
-              </div>
+              <NavLink to="/premium" style={{
+                textDecoration: 'none',
+
+              }}
+                className={({ isActive }) => isActive ? "activeNavbar premium" : "Navbar"}
+              >Premium</NavLink>
+            </div>
             {token ?
               <NavLink to="/signup" style={{ textDecoration: 'none', }}
                 className={({ isActive }) => isActive ? "activeNavbar" : "Navbar"}
                 onClick={logoutHandler}
               >Logout</NavLink> :
               <>
-                <NavLink to={login?'/signup':'/login'} style={{ textDecoration: 'none', }}
+                <NavLink to={login ? '/signup' : '/login'} style={{ textDecoration: 'none', }}
                   className={({ isActive }) => isActive ? "activeNavbar" : "Navbar"}
                   onClick={signupHandler}
-                >{login?'SignUp':'Log In' }</NavLink>
+                >{login ? 'SignUp' : 'Log In'}</NavLink>
               </>
             }
           </Nav>

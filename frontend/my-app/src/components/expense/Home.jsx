@@ -6,6 +6,9 @@ import { HttpApi } from "../utils";
 import toast from "react-hot-toast";
 import { STORE_EXPENSE_OBJ } from "../../features/ExpenseSlice";
 import { useNavigate } from "react-router-dom";
+import { SET_GLOBAL_LOADER } from "../../features/CustomSlice";
+import { jwtDecode } from "jwt-decode";
+import { STORE_USER_TOKEN } from "../../features/UserSlice";
 
 const Home = () => {
   const { userName, token } = useSelector((state) => state.UserInfo);
@@ -17,7 +20,7 @@ const Home = () => {
     item: '',
     category: ''
   })
-
+  const [isPremiumUser, setIsPremiumUser] = useState(true);
   const formSubmitHandler = async () => {
     const res = await HttpApi.post(`createExpense`, {
       amount: ExpenseOption?.amount,
@@ -36,14 +39,14 @@ const Home = () => {
       amount: ExpenseOption?.amount,
       ItemName: ExpenseOption?.item,
       Category: ExpenseOption?.category,
-      id:EditExpenseObj?.id
+      id: EditExpenseObj?.id
     });
     if (res?.data?.success) {
-        setExpenseOption({
-      amount: '',
-      item: '',
-      category: ''
-    })
+      setExpenseOption({
+        amount: '',
+        item: '',
+        category: ''
+      })
       toast.success(res?.data?.message)
       navigate('/expense')
     } else {
@@ -58,9 +61,9 @@ const Home = () => {
     })
     dispatch(STORE_EXPENSE_OBJ({}));
   }
-  const buyPremiumHandler = async() => {
+  const buyPremiumHandler = async () => {
+    dispatch(SET_GLOBAL_LOADER(true))
     const res = await HttpApi.get('createOrder');
-    console.log({ res })
     if (res?.data?.success) {
       const data = res?.data;
       const options = {
@@ -70,15 +73,17 @@ const Home = () => {
         currency: 'INR',
         name: 'Expense App',
         description: 'Premium Membership',
-        handler:async function (response) {
+        handler: async function (response) {
           const resverify = await HttpApi.post('verifyPayment', {
             razorpay_order_id: response?.razorpay_order_id,
             razorpay_payment_id: response?.razorpay_payment_id,
             razorpay_signature: response?.razorpay_signature
           });
           if (resverify?.data?.success) {
-            alert("🎉 You are now a Premium User");
+            dispatch(STORE_USER_TOKEN(resverify?.data?.data.token));
+            toast.success('Congrats!🎉 You are premium member now');
           }
+          dispatch(SET_GLOBAL_LOADER(false));
         }
       }
       const razorpay = new window.Razorpay(options);
@@ -93,19 +98,26 @@ const Home = () => {
         category: EditExpenseObj?.Category,
       })
     }
-  }, [EditExpenseObj?.id])
+  }, [EditExpenseObj?.id]);
+
+  useEffect(() => {
+    if (token) {
+      const decodeToken = jwtDecode(token);
+      setIsPremiumUser(!decodeToken?.isPremiumUser);
+    }
+  }, [token])
   return (
     <div style={{ padding: '10px' }}>
-      <div style={{display:'flex',gap:'16px'}}>
-      <p style={{ fontSize: '14px', fontWeight: '500',alignSelf:'center'}}>Hi {userName}</p>
-            <Button
-              variant="success"
-              style={{ width: "150px" }}
-              onClick={buyPremiumHandler}
-            >
-              Buy Premium
-        </Button>
-        </div><div style={{ display: 'flex', flexDirection: 'column', width: "100%", alignItems: 'center' }}>
+      <div style={{ display: 'flex', gap: '16px' }}>
+        <p style={{ fontSize: '14px', fontWeight: '500', alignSelf: 'center' }}>Hi {userName}</p>
+        {isPremiumUser && <Button
+          variant="success"
+          style={{ width: "150px" }}
+          onClick={buyPremiumHandler}
+        >
+          Buy Premium
+        </Button>}
+      </div><div style={{ display: 'flex', flexDirection: 'column', width: "100%", alignItems: 'center' }}>
         <h4>Add Expense</h4>
         <Form>
           <Form.Group className="mb-3" controlId="exampleForm.ControlInput1"
